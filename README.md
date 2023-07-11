@@ -11,8 +11,37 @@
 
 - For make fast build process, Vite is being used and chuking not required as build size is small.
 
+#### Pagination Hook
 
-
+```
+export type IReturnPageHooks = {
+    /** number of pages */
+    pages: number;
+    /** return current page number */
+    currentPage: number;
+    /** function to trigger on next */
+    handleNext: () => void;
+    /** function to trigger on prev */
+    handlePrevious: () => void;
+    /** function to trigger on page nunber click */
+    handlePage: (page: number) => void;
+}
+export const usePagination = ({ totalRecords, pageSize, initialPage }: IUsePage) => {
+    .....
+    return {
+        pages: noOfPages,
+        currentPage,
+        handleNext,
+        handlePrevious,
+        handlePage
+    }
+    ....
+}
+```
+#### Paging component
+```
+    PAGE_SIZE: 5 (default)
+```
 #### CSS framework and themeing
 
 - Bulma

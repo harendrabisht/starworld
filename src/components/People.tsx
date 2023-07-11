@@ -1,5 +1,6 @@
 import { getId } from '../utils';
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
+import { CardSkeleton } from './CardSkeleton';
 
 export interface IPeople {
   name: string;
@@ -43,3 +44,43 @@ export const People = memo(({ people }: { people: IPeople }) => {
     </div>
   );
 });
+
+export const Peoples = ({ residents }: { residents: string[] }) => {
+  const [list, setList] = useState<IPeople[] | null>(null);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const getAllPeople = async ({ urls }: { urls: string[] }) => {
+    setLoading(true);
+    const fetchList = urls.map((url) => {
+      return fetch(url).then((res) => res.json());
+    });
+    try {
+      const response = await Promise.all(fetchList);
+      setList(response);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllPeople({ urls: residents });
+  }, [residents]);
+
+  if (isLoading) {
+    return (
+      <div className="section">
+        <CardSkeleton count={5} className="is-full-mobile is-one-third-tablet is-one-third-desktop" />
+      </div>
+    );
+  }
+  return (
+    <div className="columns is-mobile is-multiline">
+      {list?.map((item) => (
+        <div key={item.created} className="column is-full-mobile is-one-third-tablet is-one-third-desktop">
+          <People people={item} />
+        </div>
+      ))}
+    </div>
+  );
+};

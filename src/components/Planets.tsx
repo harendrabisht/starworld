@@ -3,6 +3,7 @@ import { useFetch } from '../hooks/useFetch';
 import { Planet, IPlanet } from './Planet';
 import { PeopleList } from './PeopleList';
 import { CardSkeleton } from './CardSkeleton';
+import { OverlayPanel } from './OverlayPanel';
 
 export interface IPlanetResult {
   results: IPlanet[];
@@ -24,7 +25,6 @@ export const Planets: React.FC = () => {
   }, []);
 
   // handle Close modal
-
   const handleClose = useCallback(() => {
     setIsOpen(false);
     setSelectedPlanet(null);
@@ -67,23 +67,9 @@ export const Planets: React.FC = () => {
             &#8594;
           </button>
         </div>
-        <div
-          className="is-panel"
-          style={{
-            width: isOpen ? '50%' : 0,
-            height: '100vh',
-            transition: 'width .5s',
-            background: '#000',
-            position: 'fixed',
-            top: 0,
-            right: 0,
-          }}
-        >
-          <button onClick={handleClose} className="button is-danger is-large">
-            x
-          </button>
+        <OverlayPanel isOpen={isOpen} handleClose={handleClose}>
           {selectedPlanet && <PeopleList residents={selectedPlanet?.residents} planetName={selectedPlanet.name} />}
-        </div>
+        </OverlayPanel>
       </div>
     );
   }
